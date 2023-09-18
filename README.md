@@ -1,2 +1,2 @@
-# StartapBattle
+# StartUpBattle
 Just for win
