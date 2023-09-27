@@ -54,12 +54,10 @@ async def bot_start(message: types.Message):
         'Английский язык',
         'Китайский язык',
         'Турецкий язык',
-        'Еврейский язык',
     ]
-    await bot.send_photo(chat_id=message.chat.id,
-                         caption='вы нажали на старт',
-                         photo='https://www.meme-arsenal.com/memes/d641c0dfc3ac867ecacba59b13a4e7db.jpg',
-                         reply_markup=generate_markup(buttons))
+    await bot.send_message(chat_id=message.chat.id,
+                           text='вы нажали на старт',
+                           reply_markup=generate_markup(buttons))
 
 
 @dp.message_handler(commands=['close'])
@@ -108,14 +106,10 @@ async def check_phrase(callback: CallbackQuery):
 @dp.callback_query_handler()
 async def greeting_phrase(callback: CallbackQuery):
     await bot.delete_message(callback.from_user.id, callback.message.message_id)
-    ikb = InlineKeyboardMarkup()
-    button_input = InlineKeyboardButton(text='Ввести фразу', callback_data='check_phrase')
-    ikb.insert(button_input)
 
     await bot.send_message(
         chat_id=callback.from_user.id,
         text=f'Приветственная фраза бота \nВы выбрали тему "{callback.data}"',
-        reply_markup=ikb
     )
     await callback.answer()
 
