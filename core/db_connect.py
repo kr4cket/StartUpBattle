@@ -1,6 +1,7 @@
 import psycopg2
 import configparser
 
+
 class DBConnection:
 
     def __init__(self):
