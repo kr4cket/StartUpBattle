@@ -1,8 +1,11 @@
-from aiogram import Bot, Dispatcher, types
-from aiogram.contrib.fsm_storage.memory import MemoryStorage
-from aiogram.dispatcher.filters.state import StatesGroup, State
-from aiogram.utils import executor
-from aiogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardMarkup, KeyboardButton, BotCommand
+import asyncio
+import logging
+import sys
+from aiogram.enums import ParseMode, ContentType
+from aiogram.filters import CommandStart, Command
+from aiogram.utils.keyboard import InlineKeyboardBuilder
+from aiogram import Bot, Dispatcher, types, F
+from aiogram.types import CallbackQuery
 import configparser
 
 config = configparser.ConfigParser()  # создаём объекта парсера
@@ -10,64 +13,41 @@ config.read("settings.ini")  # читаем конфиг
 api_key = config['Bot']["tokenapi"]  # обращаемся как к обычному словарю!
 
 TOKEN_API = api_key
-
-bot = Bot(TOKEN_API)
-storage = MemoryStorage()
-dp = Dispatcher(bot, storage=storage)
-
-
-class PhraseForm(StatesGroup):
-    phrase = State()
-
+bot = Bot(TOKEN_API, parse_mode=ParseMode.HTML)
+dp = Dispatcher()
 
 COMMANDS = {
     '/close': 'завершить работу',
 }
 
 
-async def setup_bot_commands(bott: bot):
-    main_menu_commands = [
-        BotCommand(
-            command=command,
-            description=description
-        ) for command, description in COMMANDS.items()
-    ]
-    await bott.set_my_commands(main_menu_commands)
-
-
 # генерация кнопок
 def generate_markup(data) -> types.InlineKeyboardMarkup:
-    key = InlineKeyboardMarkup(row_width=1)
+    key = InlineKeyboardBuilder()
     i = 0
     for item in data:
-        button = InlineKeyboardButton(text=item, callback_data=item)
-        key.insert(button)
+        key.button(text=item, callback_data=f'{item}')
         i += 1
-    return key
+    key.adjust(1)
+    return key.as_markup()
 
 
-@dp.message_handler(commands=['start'])
+@dp.message(CommandStart())
 async def bot_start(message: types.Message):
-    await setup_bot_commands(bot)
+
     buttons = [
         'Русский язык',
         'Английский язык',
         'Китайский язык',
         'Турецкий язык',
     ]
-    await bot.send_message(chat_id=message.chat.id,
-                           text='вы нажали на старт',
-                           reply_markup=generate_markup(buttons))
+    await message.answer(text='вы нажали на старт',
+                         reply_markup=generate_markup(buttons))
 
 
-@dp.message_handler(commands=['close'])
-async def bot_start(message: types.Message):
-    await bot.send_message(chat_id=message.chat.id, text='Нажмите на /start')
-
-
-@dp.callback_query_handler(text_contains='язык')
+@dp.callback_query(F.data.contains('язык'))
 async def themes_list(callback: CallbackQuery):
-    await bot.delete_message(callback.from_user.id, callback.message.message_id)
+    # await bot.delete_message(callback.from_user.id, callback.message.message_id)
     buttons = [
         'тема 1',
         'тема 2',
@@ -85,28 +65,9 @@ async def themes_list(callback: CallbackQuery):
     await callback.answer()
 
 
-@dp.callback_query_handler(text='close')
-async def cancel_bot(callback: CallbackQuery):
-    await bot.delete_message(callback.from_user.id, callback.message.message_id)
-    await bot.send_message(
-        chat_id=callback.from_user.id,
-        text=f'нажмите /start',
-    )
-
-
-@dp.callback_query_handler(text='check_phrase')
-async def check_phrase(callback: CallbackQuery):
-    await bot.delete_message(callback.from_user.id, callback.message.message_id)
-    await bot.send_message(
-        chat_id=callback.from_user.id,
-        text=f'Введите фразу',
-    )
-
-
-@dp.callback_query_handler()
+@dp.callback_query()
 async def greeting_phrase(callback: CallbackQuery):
-    await bot.delete_message(callback.from_user.id, callback.message.message_id)
-
+    # await bot.delete_message(callback.from_user.id, callback.message.message_id)
     await bot.send_message(
         chat_id=callback.from_user.id,
         text=f'Приветственная фраза бота \nВы выбрали тему "{callback.data}"',
@@ -114,5 +75,21 @@ async def greeting_phrase(callback: CallbackQuery):
     await callback.answer()
 
 
-if __name__ == '__main__':
-    executor.start_polling(dp)
+@dp.message(Command('close'))
+async def close_dialog(message: types.Message):
+    await message.answer(text='Нажмите на /start')
+
+
+@dp.message(F.text)
+async def accept_new_massage(message: types.Message):
+    await message.answer(text='ну и хуйню ты выдал')
+
+
+async def main() -> None:
+    # And the run events dispatching
+    await dp.start_polling(bot)
+
+
+if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO, stream=sys.stdout)
+    asyncio.run(main())
