@@ -1,3 +1,4 @@
 settings.ini
-rabbitmq/config.py
+config.py
 *.pyc
+.idea

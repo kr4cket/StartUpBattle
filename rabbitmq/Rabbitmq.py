@@ -49,6 +49,5 @@ class Rabbitmq:
 
     @classmethod
     def send(cls, data: json = None):
-        data = bytes('Hello World!', 'utf-8')
         cls.__channel.basic_publish(exchange=config.out_exchange, routing_key=config.output_queue, body=data)
-        print(" [x] Sent 'Hello World!'")
+        print(f" [x] Sent {data}")

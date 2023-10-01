@@ -1,4 +1,5 @@
 import asyncio
+import json
 import logging
 import sys
 from aiogram.enums import ParseMode, ContentType
@@ -6,15 +7,17 @@ from aiogram.filters import CommandStart, Command
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram import Bot, Dispatcher, types, F
 from aiogram.types import CallbackQuery
+from rabbitmq.Rabbitmq import Rabbitmq
 import configparser
 
 config = configparser.ConfigParser()  # создаём объекта парсера
-config.read("settings.ini")  # читаем конфиг
+config.read("../settings.ini")  # читаем конфиг
 api_key = config['Bot']["tokenapi"]  # обращаемся как к обычному словарю!
 
 TOKEN_API = api_key
 bot = Bot(TOKEN_API, parse_mode=ParseMode.HTML)
 dp = Dispatcher()
+sender = Rabbitmq()
 
 COMMANDS = {
     '/close': 'завершить работу',
@@ -36,11 +39,10 @@ def generate_markup(data) -> types.InlineKeyboardMarkup:
 async def bot_start(message: types.Message):
 
     buttons = [
-        'Русский язык',
-        'Английский язык',
-        'Китайский язык',
-        'Турецкий язык',
+        'Английский язык'
     ]
+    request = json.dumps({"type": "start_dialog", "chat_id": message.chat.id, "user_id": message.from_user.id})
+    sender.send(request)
     await message.answer(text='вы нажали на старт',
                          reply_markup=generate_markup(buttons))
 
@@ -49,14 +51,10 @@ async def bot_start(message: types.Message):
 async def themes_list(callback: CallbackQuery):
     # await bot.delete_message(callback.from_user.id, callback.message.message_id)
     buttons = [
-        'тема 1',
-        'тема 2',
-        'тема 3',
-        'тема 4',
-        'тема 5',
-        'тема 6',
-        'тема 7',
+        'Еда'
     ]
+    request = json.dumps({"type": "set_lang", "lang": callback.data, "chat_id": callback.from_user.id})
+    sender.send(request)
     await bot.send_message(
         chat_id=callback.from_user.id,
         text=f'вы выбрали {callback.data} \nВыберите тему',
@@ -68,6 +66,8 @@ async def themes_list(callback: CallbackQuery):
 @dp.callback_query()
 async def greeting_phrase(callback: CallbackQuery):
     # await bot.delete_message(callback.from_user.id, callback.message.message_id)
+    request = json.dumps({"type": "set_theme", "theme": callback.data, "chat_id": callback.id})
+    sender.send(request)
     await bot.send_message(
         chat_id=callback.from_user.id,
         text=f'Приветственная фраза бота \nВы выбрали тему "{callback.data}"',
@@ -77,11 +77,15 @@ async def greeting_phrase(callback: CallbackQuery):
 
 @dp.message(Command('close'))
 async def close_dialog(message: types.Message):
+    request = json.dumps({"type": "finish_dialog", "chat_id": message.from_user.id})
+    sender.send(request)
     await message.answer(text='Нажмите на /start')
 
 
 @dp.message(F.text)
 async def accept_new_massage(message: types.Message):
+    request = json.dumps({"type": "message", "prompt_data": message.text, "chat_id": message.from_user.id})
+    sender.send(request)
     await message.answer(text='ну и хуйню ты выдал')
 
 
