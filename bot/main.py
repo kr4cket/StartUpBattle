@@ -17,7 +17,6 @@ api_key = config['Bot']["tokenapi"]  # обращаемся как к обычн
 TOKEN_API = api_key
 bot = Bot(TOKEN_API, parse_mode=ParseMode.HTML)
 dp = Dispatcher()
-sender = Rabbitmq()
 
 COMMANDS = {
     '/close': 'завершить работу',
@@ -42,7 +41,7 @@ async def bot_start(message: types.Message):
         'Английский язык'
     ]
     request = json.dumps({"type": "start_dialog", "chat_id": message.chat.id, "user_id": message.from_user.id})
-    sender.send(request)
+    Rabbitmq.send(request)
     await message.answer(text='вы нажали на старт',
                          reply_markup=generate_markup(buttons))
 
@@ -54,7 +53,7 @@ async def themes_list(callback: CallbackQuery):
         'Еда'
     ]
     request = json.dumps({"type": "set_lang", "lang": callback.data, "chat_id": callback.from_user.id})
-    sender.send(request)
+    Rabbitmq.send(request)
     await bot.send_message(
         chat_id=callback.from_user.id,
         text=f'вы выбрали {callback.data} \nВыберите тему',
@@ -67,7 +66,7 @@ async def themes_list(callback: CallbackQuery):
 async def greeting_phrase(callback: CallbackQuery):
     # await bot.delete_message(callback.from_user.id, callback.message.message_id)
     request = json.dumps({"type": "set_theme", "theme": callback.data, "chat_id": callback.id})
-    sender.send(request)
+    Rabbitmq.send(request)
     await bot.send_message(
         chat_id=callback.from_user.id,
         text=f'Приветственная фраза бота \nВы выбрали тему "{callback.data}"',
@@ -78,14 +77,22 @@ async def greeting_phrase(callback: CallbackQuery):
 @dp.message(Command('close'))
 async def close_dialog(message: types.Message):
     request = json.dumps({"type": "finish_dialog", "chat_id": message.from_user.id})
-    sender.send(request)
+    Rabbitmq.send(request)
     await message.answer(text='Нажмите на /start')
 
 
 @dp.message(F.text)
 async def accept_new_massage(message: types.Message):
     request = json.dumps({"type": "message", "prompt_data": message.text, "chat_id": message.from_user.id})
-    sender.send(request)
+    Rabbitmq.send(request)
+    message = Rabbitmq.get()
+    await message.answer(text='ну и хуйню ты выдал')
+
+
+@dp.message(F.text)
+async def send_massage(message: types.Message):
+    request = json.dumps({"type": "message", "prompt_data": message.text, "chat_id": message.from_user.id})
+    Rabbitmq.send(request)
     await message.answer(text='ну и хуйню ты выдал')
 
 
