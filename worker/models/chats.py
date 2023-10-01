@@ -13,7 +13,7 @@ class ChatModel(DB):
                     INSERT INTO chats (id, user_id) VALUES(%s, %s)
                 """
 
-            self._cursor.execute(sql, (data["id"], data["user_id"]))
+            self._cursor.execute(sql, (data["chat_id"], data["user_id"]))
             super()._save()
             return True
 
@@ -38,14 +38,15 @@ class ChatModel(DB):
 
     def update(self, data):
         try:
-            chat_id = data.pop("id")
-            for key in data.keys():
+            update_data = dict(data)
+            chat_id = update_data.pop("chat_id")
+            for key in update_data.keys():
 
                 sql = f""" UPDATE chats
                             SET {key} = %s
                             WHERE id = %s"""
 
-                self._cursor.execute(sql, (data[key], chat_id))
+                self._cursor.execute(sql, (update_data[key], chat_id))
                 super()._save()
 
             return True
@@ -60,7 +61,7 @@ class ChatModel(DB):
             sql = f""" SELECT * FROM chats
                         WHERE id = %s"""
 
-            self._cursor.execute(sql, [data["id"]])
+            self._cursor.execute(sql, [data["chat_id"]])
             super()._save()
             return self._cursor.fetchone()
 

@@ -3,6 +3,12 @@ import config
 # для функционирования класса, необходим конфиг Rabbitmq. за примером конфига обращаться к Матвею
 from pika import ConnectionParameters, PlainCredentials, BlockingConnection
 from pika.adapters.blocking_connection import BlockingChannel
+from worker.actions.router import Router
+from worker.actions.service import Service
+
+from aiogram.enums import ParseMode
+from aiogram import Bot
+import configparser
 
 
 class Rabbitmq:
@@ -41,6 +47,7 @@ class Rabbitmq:
             ch.basic_ack(delivery_tag=method.delivery_tag)
 
         def input_callback(ch, method, properties, body):
+            Router().run(body)
             print(f" [x] Received2 {body}")
             ch.basic_ack(delivery_tag=method.delivery_tag)
 

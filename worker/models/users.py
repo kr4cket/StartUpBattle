@@ -13,7 +13,7 @@ class UserModel(DB):
                     INSERT INTO users (id) VALUES(%s)
                 """
 
-            self._cursor.execute(sql, [data["id"]])
+            self._cursor.execute(sql, [data["user_id"]])
             super()._save()
             return True
 
