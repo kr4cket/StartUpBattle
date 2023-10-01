@@ -36,19 +36,34 @@ class Rabbitmq:
 
     @classmethod
     def listen(cls):
-        def callback(ch, method, properties, body):
+        def output_callback(ch, method, properties, body):
             print(f" [x] Received {body}")
+            ch.basic_ack(delivery_tag=method.delivery_tag)
+
+        def input_callback(ch, method, properties, body):
+            print(f" [x] Received2 {body}")
+            ch.basic_ack(delivery_tag=method.delivery_tag)
 
         cls.__channel.basic_consume(
             queue=config.output_queue,
-            on_message_callback=callback
+            on_message_callback=output_callback
         )
 
-        print(' [*] Waiting for messages. To exit press CTRL+C')
+        cls.__channel.basic_consume(
+            queue=config.input_queue,
+            on_message_callback=input_callback
+        )
+
+        print('The listener is working, don\'t close this window!')
         cls.__channel.start_consuming()
 
     @classmethod
-    def send(cls, data: json = None):
-        data = bytes('Hello World!', 'utf-8')
-        cls.__channel.basic_publish(exchange=config.out_exchange, routing_key=config.output_queue, body=data)
-        print(" [x] Sent 'Hello World!'")
+    def send(cls, data: json, routing_key: str):
+        """
+        Аргумент data - JSON, который необходимо передать в rabbitmq
+
+        Аргумент routing_key - очередь в rabbitmq, в которую необходимо поместить ваш JSON
+        (input_queue - для информации от пользователя или output_queue - для ответа нейросети)
+        """
+        cls.__channel.basic_publish(exchange=config.out_exchange, routing_key=routing_key, body=data)
+        print("Your message has been send")
