@@ -1,4 +1,4 @@
-from StartUpBattle.core.db import DB
+from StartUpBattle.worker.core.db import DB
 
 
 class ChatModel(DB):
