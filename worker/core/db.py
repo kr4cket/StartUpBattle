@@ -1,4 +1,4 @@
-from StartUpBattle.worker.core.db_connect import DBConnection
+from worker.core.db_connect import DBConnection
 
 
 class DB:
