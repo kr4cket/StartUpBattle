@@ -1,5 +1,5 @@
-from StartUpBattle.worker.models.users import UserModel
-from StartUpBattle.worker.models.chats import ChatModel
+from models.users import UserModel
+from models.chats import ChatModel
 
 
 user = UserModel()

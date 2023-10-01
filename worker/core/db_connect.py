@@ -16,9 +16,9 @@ class DBConnection:
         config = configparser.ConfigParser()
         config.read("../settings.ini")
         connection_data = config['db']
-        conn = psycopg2.connect(f"""postgresql://{connection_data.get('DB_USER')}:{connection_data.get('DB_PASS')}"
+        conn = psycopg2.connect(f"postgresql://{connection_data.get('DB_USER')}:{connection_data.get('DB_PASS')}"
                                 f"@{connection_data.get('DB_HOST')}:{connection_data.get('DB_PORT')}/"
-                                f"{connection_data.get('DB_NAME')}""")
+                                f"{connection_data.get('DB_NAME')}")
         return conn
 
     def get_connection(self):
