@@ -21,7 +21,6 @@ class UserModel(DB):
             print(f"Ошибка создания записи с в таблице Users:\n{e}")
             return False
 
-
     def delete(self, data):
 
         try:

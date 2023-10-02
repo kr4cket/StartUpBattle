@@ -21,7 +21,6 @@ class ChatModel(DB):
             print(f"Ошибка создания записи с в таблице chats:\n{e}")
             return False
 
-
     def delete(self, data):
 
         try:

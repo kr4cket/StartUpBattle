@@ -33,7 +33,6 @@ class Service:
         self.chats.update(data)
         self.greeting_message(data)
 
-
     def finish_dialog(self, data):
         self.chats.delete(data)
 
@@ -63,4 +62,3 @@ class Service:
             result += message
 
         await self.bot.send_message(chat_id=id, text=result)
-
