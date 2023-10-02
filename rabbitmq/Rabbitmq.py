@@ -1,41 +1,42 @@
 import json
-import config
+import configparser
 # для функционирования класса, необходим конфиг Rabbitmq. за примером конфига обращаться к Матвею
 from pika import ConnectionParameters, PlainCredentials, BlockingConnection
 from pika.adapters.blocking_connection import BlockingChannel
 from worker.actions.router import Router
-from worker.actions.service import Service
-
-from aiogram.enums import ParseMode
-from aiogram import Bot
-import configparser
 
 
 class Rabbitmq:
     _instance = None
     __connection: BlockingConnection = None
     __channel: BlockingChannel = None
-    __parameters: ConnectionParameters = ConnectionParameters(
-        host=config.rabbit_host,
-        virtual_host=config.rabbit_vhost,
-        port=config.rabbit_port,
-        credentials=PlainCredentials(config.rabbit_login, config.rabbit_password),
-        heartbeat=600,
-        blocked_connection_timeout=14400
-    )
+    __config = None
 
     def __new__(cls):
         if not cls._instance:
+            parser = configparser.ConfigParser()
+            parser.read("../settings.ini")
+            cls.__config = parser['rabbitmq']
+
+            parameters = ConnectionParameters(
+                host=cls.__config['rabbit_host'],
+                virtual_host=cls.__config['rabbit_vhost'],
+                port=int(cls.__config['rabbit_port']),
+                credentials=PlainCredentials(cls.__config['rabbit_login'], cls.__config['rabbit_password']),
+                heartbeat=600,
+                blocked_connection_timeout=14400
+            )
+
             cls._instance = super(Rabbitmq, cls).__new__(cls)
 
-            cls.__connection = BlockingConnection(cls.__parameters)
+            cls.__connection = BlockingConnection(parameters)
 
             cls.__channel = cls.__connection.channel()
 
             cls.__channel.queue_bind(
-                queue=config.output_queue,
-                exchange=config.out_exchange,
-                routing_key=config.output_queue
+                queue=cls.__config['output_queue'],
+                exchange=cls.__config['out_exchange'],
+                routing_key=cls.__config['output_queue']
             )
 
         return cls._instance
@@ -52,12 +53,12 @@ class Rabbitmq:
             ch.basic_ack(delivery_tag=method.delivery_tag)
 
         cls.__channel.basic_consume(
-            queue=config.output_queue,
+            queue=cls.__config['output_queue'],
             on_message_callback=output_callback
         )
 
         cls.__channel.basic_consume(
-            queue=config.input_queue,
+            queue=cls.__config['input_queue'],
             on_message_callback=input_callback
         )
 
@@ -72,5 +73,9 @@ class Rabbitmq:
         Аргумент routing_key - очередь в rabbitmq, в которую необходимо поместить ваш JSON
         (input_queue - для информации от пользователя или output_queue - для ответа нейросети)
         """
-        cls.__channel.basic_publish(exchange=config.out_exchange, routing_key=routing_key, body=data)
+        cls.__channel.basic_publish(exchange=cls.__config['out_exchange'], routing_key=routing_key, body=data)
         print("Your message has been send")
+
+    @classmethod
+    def get_config(cls) -> list:
+        return cls.__config
