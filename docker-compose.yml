@@ -34,17 +34,3 @@ services:
     ports:
       - "15672:15672"
       - "5672:5672"
-
-  worker:
-      container_name: worker
-      build:
-        dockerfile: Dockerfile
-      depends_on:
-        - rabbitmq
-
-  bot:
-    container_name: bot
-    build:
-      dockerfile: Dockerfile
-    depends_on:
-      - rabbitmq

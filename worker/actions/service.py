@@ -52,7 +52,6 @@ class Service:
 
         response = g4f.ChatCompletion.create(
             model="gpt-3.5-turbo",
-            provider=g4f.Provider.DeepAi,
             messages=[{"role": "user", "content": prompt}],
             stream=True,
         )
