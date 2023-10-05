@@ -18,3 +18,25 @@
 ```
     docker-compose --project-name="test" down
 ```
+
+##### Стек технологий:
+
+1. Ядро ИИ
+    - Python
+    - g4f
+2. Telegram Bot
+    - Python
+    - Aiogram
+3. Backend
+    - Golang
+    - Gin
+4. Frontend:
+    - VueJS
+    - Vue Router
+    - Vue i18n
+    - Vuex
+    - Stylus
+5. Брокер сообщений:
+    - RabbitMQ
+6. База данных:
+    - PostgreSQL
