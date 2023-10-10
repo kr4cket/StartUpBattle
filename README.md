@@ -9,10 +9,7 @@
 ##### Команда запуска dev-среды :
 ```
     docker-compose --project-name="test" up -d
-    pip install -r requirements.txt
-    yoyo apply --database postgresql://stbuser:stbuser@localhost:5436/data ./worker/migrations
 ```
-
 
 ##### Команда выключения dev-среды:
 ```

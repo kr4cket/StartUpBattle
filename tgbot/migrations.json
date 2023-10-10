@@ -1,0 +1,10 @@
+{
+  "prerun": "# some code here",
+  "directory": "migrations",
+  "history": "migratehistory",
+  "models": [
+    "core.models.Language",
+    "core.models.Theme",
+    "core.models.LanguageLevel"
+  ]
+}
