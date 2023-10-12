@@ -34,8 +34,8 @@
     - VueJS
     - Vue Router
     - Vue i18n
-    - Vuex
-    - Stylus
+    - Pinia
+    - Axios
 5. Брокер сообщений:
     - RabbitMQ
 6. База данных:
