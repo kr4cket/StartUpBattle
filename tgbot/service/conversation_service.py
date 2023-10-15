@@ -6,10 +6,6 @@ from tgbot.core.models import *
 
 class ConversationService:
 
-    # def __init__(self):
-    #     #self.__bot = tg
-    #     pass
-
     def is_theme_set(self, user_id: int) -> bool:
         chat = Chat.get(Chat.id == user_id)
         if chat.theme is None:
@@ -25,7 +21,9 @@ class ConversationService:
             return True
 
     def start(self, user_id):
-        Chat.insert(id=user_id).execute()
+        chat = Chat.get(Chat.id == user_id)
+        if chat is None:
+            Chat.insert(id=user_id).execute()
 
     def create_message(self, user_id: int = 0, msg: str = ""):
         return self.__send(user_id, "generate_message", msg)
