@@ -1,6 +1,5 @@
 import json
 import configparser
-# для функционирования класса, необходим конфиг Rabbitmq. за примером конфига обращаться к Матвею
 from pika import ConnectionParameters, PlainCredentials, BlockingConnection
 from pika.adapters.blocking_connection import BlockingChannel
 from worker.actions.router import Router

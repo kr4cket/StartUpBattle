@@ -6,10 +6,15 @@
 + Запускаем worker в директории /worker/main.py
 
 
-##### Команда запуска dev-среды :
+##### Команды запуска dev-среды :
 ```
     docker-compose --project-name="test" up -d
+    cd tgbot
+    pem show
+    pem migrate
 ```
+
+Чтобы заполнить данные в БД, запустите скрипт core/filling_data/fill_tables
 
 ##### Команда выключения dev-среды:
 ```

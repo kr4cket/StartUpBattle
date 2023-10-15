@@ -1,5 +1,5 @@
 from peewee import *
-from core.db_conn import DBConnection
+from tgbot.core.db_conn import DBConnection
 
 
 class BaseModel(Model):
@@ -27,3 +27,8 @@ class LanguageLevel(BaseModel):
     lang = ForeignKeyField(Language, backref="langs")
 
 
+class Chat(BaseModel):
+    id = BigIntegerField(primary_key=True, null=False)
+    theme = ForeignKeyField(Theme, backref="chat", null=True)
+    lang = ForeignKeyField(Language, backref="chat", null=True)
+    lvl = ForeignKeyField(LanguageLevel, backref="chat", null=True)

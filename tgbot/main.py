@@ -1,21 +1,17 @@
 import asyncio
+import configparser
 from aiogram import Bot, Dispatcher
 from handlers import conversation_handler
-from core.db_conn import DBConnection
-from core.models import *
 
+async def main(parser):
 
-
-api = "6295948983:AAHxI8brOC3o0jvaKS2zGvmO4ju8rOvu3Pc"
-
-async def main():
-
-    bot = Bot(token=api)
+    bot = Bot(token=parser['Bot']["tokenapi"])
     dp = Dispatcher()
     dp.include_router(conversation_handler.router)
-
-#   await слушателя в рэбит
+    # подключение к рэббит
     await dp.start_polling(bot)
 
 if __name__ == '__main__':
-    asyncio.run(main())
+    parser = configparser.ConfigParser()
+    parser.read("../settings.ini")
+    asyncio.run(main(parser))

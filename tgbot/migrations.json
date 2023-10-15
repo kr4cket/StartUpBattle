@@ -5,6 +5,7 @@
   "models": [
     "core.models.Language",
     "core.models.Theme",
-    "core.models.LanguageLevel"
+    "core.models.LanguageLevel",
+    "core.models.Chat"
   ]
 }

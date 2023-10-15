@@ -4,17 +4,17 @@ langs = ["Английский", "Китайский"]
 themes = ["Еда", "Путешествия", "Семья", "Свободная"]
 levels = ["HSK", "A", "B", "C"]
 
-# for lg in langs:
-#     row = Language(
-#         name=lg+" язык"
-#     )
-#     row.save()
-#
-# for th in themes:
-#     row = Theme(
-#         name=th
-#     )
-#     row.save()
+for lg in langs:
+    row = Language(
+        name=lg+" язык"
+    )
+    row.save()
+
+for th in themes:
+    row = Theme(
+        name=th
+    )
+    row.save()
 
 for lvl in levels:
     if lvl == "HSK":
