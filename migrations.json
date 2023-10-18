@@ -1,0 +1,11 @@
+{
+  "prerun": "# some code here",
+  "directory": "migrations",
+  "history": "migratehistory",
+  "models": [
+    "tgbot.core.models.Language",
+    "tgbot.core.models.Theme",
+    "tgbot.core.models.LanguageLevel",
+    "tgbot.core.models.Chat"
+  ]
+}
