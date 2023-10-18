@@ -2,9 +2,8 @@ import json
 
 import g4f
 
+
 class AIService:
-
-
     async def send_message(self, prompt):
         """
             Генерация запроса к нейросетке
@@ -30,7 +29,7 @@ class AIService:
 
         if prompt_data["type"] == "generate_message":
             prompt = f"Напиши ответ на сообщение {prompt_data['text']} по теме {prompt_data['theme']} на {prompt_data['lang']} уровня {prompt_data['lvl']}"
-        elif  prompt_data["type"] == "generate_greeting":
+        elif prompt_data["type"] == "generate_greeting":
             prompt = f"Напиши приветственное предложение на тему {prompt_data['theme']} на {prompt_data['lang']} уровня {prompt_data['lvl']}"
 
         return prompt

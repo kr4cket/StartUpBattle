@@ -7,18 +7,18 @@ from tgbot.keyboards.for_theme import ThemeKeyBoard
 from tgbot.service.conversation_service import ConversationService
 
 router = Router()
-service = ConversationService()
+
 
 @router.message(CommandStart())
 async def bot_start(message: types.Message):
-    service.start(message.from_user.id)
+    ConversationService().start(message.from_user.id)
     await message.answer(text='Выберете язык',
                          reply_markup=LangKeyBoard().get_buttons())
 
 
 @router.callback_query(F.data.contains('язык'))
 async def level_list(callback: CallbackQuery):
-    service.set_lang_data(callback.from_user.id, callback.data)
+    ConversationService().set_lang_data(callback.from_user.id, callback.data)
     await callback.message.answer(
         text=f'вы выбрали {callback.data}\nВыберите уровень',
         reply_markup=LevelKeyBoard(callback.data).get_buttons()
@@ -28,8 +28,8 @@ async def level_list(callback: CallbackQuery):
 
 @router.callback_query()
 async def theme_list(callback: CallbackQuery):
-    if not service.is_theme_set(callback.from_user.id) and not service.is_level_set(callback.from_user.id):
-        service.set_level_data(callback.from_user.id, callback.data)
+    if not ConversationService().is_theme_set(callback.from_user.id) and not ConversationService().is_level_set(callback.from_user.id):
+        ConversationService().set_level_data(callback.from_user.id, callback.data)
         await callback.message.answer(
             text=f'Вы выбрали сложность: "{callback.data}"\nВыберите тему',
             reply_markup=ThemeKeyBoard().get_buttons()
@@ -46,14 +46,13 @@ async def close_dialog(message: types.Message):
 
 @router.message(F.text)
 async def accept_new_massage(message: types.Message):
-    msg = await service.create_message(message.from_user.id, message.text)
+    msg = await ConversationService().send(message.from_user.id, "generate_message", message.text)
     await message.answer(text=msg)
 
 
 async def greeting_phrase(callback: CallbackQuery):
-    service.set_theme_data(callback.from_user.id, callback.data)
+    ConversationService().set_theme_data(callback.from_user.id, callback.data)
     await callback.message.answer(
         text=f'Вы выбрали тему: "{callback.data}"\n',
     )
-    msg = await service.create_greeting(callback.from_user.id)
-    await callback.message.answer(text=msg)
+    await ConversationService().send(callback.from_user.id, "generate_greeting")

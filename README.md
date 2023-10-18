@@ -10,7 +10,7 @@
 ```
     docker-compose --project-name="test" up -d
     cd tgbot
-    pem show
+    pem watch
     pem migrate
 ```
 
