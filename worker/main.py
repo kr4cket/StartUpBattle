@@ -1,6 +1,4 @@
-from rabbitmq.Rabbitmq import Rabbitmq
+from worker.core.RabbitmqWorker import RabbitmqWorker
 
 if __name__ == "__main__":
-
-    print('Worker started')
-    Rabbitmq().listen()
+    RabbitmqWorker().listen()

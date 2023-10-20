@@ -34,3 +34,20 @@ services:
     ports:
       - "15672:15672"
       - "5672:5672"
+
+  worker:
+    container_name: worker
+    build:
+      context: ./worker
+      dockerfile: Dockerfile
+    depends_on:
+      - rabbitmq
+
+  bot:
+    container_name: tgbot
+    build:
+      context: ./tgbot
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres
+      - rabbitmq

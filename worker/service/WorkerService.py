@@ -1,5 +1,9 @@
 from worker.service.ai_service import AIService
+from worker.core.RabbitmqWorker import RabbitmqWorker
 
+
+
+RabbitmqWorker.send("fdsfs")
 
 class WorkerService:
     @classmethod

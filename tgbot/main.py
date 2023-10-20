@@ -15,7 +15,6 @@ async def main(parser):
     dp.include_router(conversation_handler.router)
 
     threading.Thread(target=RabbitmqTgbot().listen).start()
-    threading.Thread(target=RabbitmqWorker().listen).start()
 
     await dp.start_polling(bot)
 

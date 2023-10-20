@@ -6,6 +6,9 @@
 + Запускаем worker в директории /worker/main.py
 
 
+##### ВАЖНО - Образы Воркера и Бота пока не работают
+
+
 ##### Команды запуска dev-среды :
 ```
     docker-compose --project-name="test" up -d
