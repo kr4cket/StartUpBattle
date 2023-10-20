@@ -1,7 +1,6 @@
 import json
-from tgbot.service.ai_service import AIService
 from tgbot.core.models import *
-from tgbot.core.RabbitmqConnector import RabbitmqConnector
+from tgbot.core.RabbitmqTgbot import RabbitmqTgbot
 
 
 class ConversationService:
@@ -53,7 +52,7 @@ class ConversationService:
          .execute())
 
     @classmethod
-    async def send(cls, user_id: int, message_type: str, text_data: str = ""):
+    async def send_data_rabbitmq(cls, user_id: int, message_type: str, text_data: str = ""):
         chat = Chat.get(Chat.id == user_id)
         request = (json.dumps(
             {
@@ -65,8 +64,7 @@ class ConversationService:
                 "text": text_data
             }))
 
-        # TODO Заменить на отправку RabbitMQ
+        RabbitmqTgbot().send(request)
 
-        RabbitmqConnector().send(request)
-
-        #return await AIService().send_message(AIService().generate_prompt(request))
+    def send_message_to_user(self, data: list):
+        print(data)

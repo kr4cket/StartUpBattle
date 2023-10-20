@@ -1,10 +1,12 @@
+import asyncio
 import json
 import configparser
+
 from pika import ConnectionParameters, PlainCredentials, BlockingConnection
 from rabbitmq.Rabbitmq import Rabbitmq
 
 
-class RabbitmqConnector(Rabbitmq):
+class RabbitmqTgbot(Rabbitmq):
     def __new__(cls):
         if not cls._instance:
             parser = configparser.ConfigParser()
@@ -20,7 +22,7 @@ class RabbitmqConnector(Rabbitmq):
                 blocked_connection_timeout=14400
             )
 
-            cls._instance = super(Rabbitmq, cls).__new__(cls)
+            cls._instance = super(RabbitmqTgbot, cls).__new__(cls)
 
             cls.__connection = BlockingConnection(parameters)
 
@@ -45,7 +47,7 @@ class RabbitmqConnector(Rabbitmq):
             on_message_callback=output_callback
         )
 
-        print('The listener is working, don\'t close this window!')
+        print('Tgbot listener is working, don\'t close this window!')
         cls.__channel.start_consuming()
 
     @classmethod

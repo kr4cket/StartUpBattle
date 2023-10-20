@@ -46,7 +46,7 @@ async def close_dialog(message: types.Message):
 
 @router.message(F.text)
 async def accept_new_massage(message: types.Message):
-    msg = await ConversationService().send(message.from_user.id, "generate_message", message.text)
+    msg = await ConversationService().send_data_rabbitmq(message.from_user.id, "generate_message", message.text)
     await message.answer(text=msg)
 
 
@@ -55,4 +55,4 @@ async def greeting_phrase(callback: CallbackQuery):
     await callback.message.answer(
         text=f'Вы выбрали тему: "{callback.data}"\n',
     )
-    await ConversationService().send(callback.from_user.id, "generate_greeting")
+    await ConversationService().send_data_rabbitmq(callback.from_user.id, "generate_greeting")

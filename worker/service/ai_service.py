@@ -4,14 +4,13 @@ import g4f
 
 
 class AIService:
-    async def send_message(self, prompt):
+    def send_message(self, prompt):
         """
             Генерация запроса к нейросетке
             #TODO Посмотреть другого провайдера
         """
         response = g4f.ChatCompletion.create(
             model="gpt-3.5-turbo",
-            provider=g4f.Provider.PerplexityAi,
             messages=[{"role": "user", "content": prompt}]
         )
 
