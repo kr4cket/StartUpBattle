@@ -1,13 +1,16 @@
-from worker.service.ai_service import AIService
-from worker.core.RabbitmqWorker import RabbitmqWorker
+import json
 
+from worker.core.AIModule import AIService
+from worker.core.PromptGenerator import PromptGenerator
 
-
-RabbitmqWorker.send("fdsfs")
 
 class WorkerService:
     @classmethod
-    def run(cls, data: list):
-        answer = AIService().send_message(AIService().generate_prompt(data))
+    def run(cls, data):
+        answer = AIService().send_message(PromptGenerator().generate_prompt(data))
 
-        print(answer)
+        data = json.loads(data)
+        data["answer"] = answer
+        data = json.dumps(data)
+
+        return data

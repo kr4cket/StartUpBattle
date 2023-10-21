@@ -1,5 +1,7 @@
 import json
 import configparser
+
+from asyncio import ProactorEventLoop
 from pika import ConnectionParameters, PlainCredentials, BlockingConnection
 
 from rabbitmq.Rabbitmq import Rabbitmq
@@ -37,10 +39,14 @@ class RabbitmqWorker(Rabbitmq):
         return cls._instance
 
     @classmethod
-    def listen(cls):
+    def listen(cls, loop: ProactorEventLoop = None):
         def input_callback(ch, method, properties, body):
-            WorkerService.run(body)
-            print(f" [x] Received2 {body}")
+            print(f" [x] Worker received from tgbot: {body}")
+
+            message = WorkerService.run(body)
+
+            cls.send(message)
+
             ch.basic_ack(delivery_tag=method.delivery_tag)
 
         cls.__channel.basic_consume(

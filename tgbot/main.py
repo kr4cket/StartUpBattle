@@ -2,23 +2,26 @@ import asyncio
 import configparser
 import threading
 
-from aiogram import Bot, Dispatcher
+from aiogram import Dispatcher
 from handlers import conversation_handler
+from tgbot.core.TelegramBot import TelegramBot
 from tgbot.core.RabbitmqTgbot import RabbitmqTgbot
-from worker.core.RabbitmqWorker import RabbitmqWorker
 
 
 async def main(parser):
-
-    bot = Bot(token=parser['Bot']["tokenapi"])
     dp = Dispatcher()
     dp.include_router(conversation_handler.router)
 
-    threading.Thread(target=RabbitmqTgbot().listen).start()
+    loop = asyncio.get_event_loop()
 
-    await dp.start_polling(bot)
+    threading.Thread(target=RabbitmqTgbot().listen, args=(loop,)).start()
+
+    await dp.start_polling(TelegramBot().get_bot_instance())
 
 if __name__ == '__main__':
     parser = configparser.ConfigParser()
     parser.read("../settings.ini")
     asyncio.run(main(parser))
+
+
+

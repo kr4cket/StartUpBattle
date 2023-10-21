@@ -1,9 +1,7 @@
-import json
 from tgbot.core.models import *
-from tgbot.core.RabbitmqTgbot import RabbitmqTgbot
 
 
-class ConversationService:
+class ConversationModel:
 
     @classmethod
     def is_theme_set(cls, user_id: int) -> bool:
@@ -28,7 +26,7 @@ class ConversationService:
             Chat.insert(id=user_id).execute()
 
     @classmethod
-    def set_lang_data(cls, user_id: int, language: str):
+    def set_language_data(cls, user_id: int, language: str):
         (Chat.update(
             lang=Language.select()
             .where(Language.name == language)
@@ -52,19 +50,5 @@ class ConversationService:
          .execute())
 
     @classmethod
-    async def send_data_rabbitmq(cls, user_id: int, message_type: str, text_data: str = ""):
-        chat = Chat.get(Chat.id == user_id)
-        request = (json.dumps(
-            {
-                "type": message_type,
-                "user_id": chat.id,
-                "lang": chat.lang.name,
-                "theme": chat.theme.name,
-                "lvl": chat.lvl.name,
-                "text": text_data
-            }))
-
-        RabbitmqTgbot().send(request)
-
-    def send_message_to_user(self, data: list):
-        print(data)
+    def get_chat_info(cls, user_id: int):
+        return Chat.select().where(Chat.id == user_id).get()

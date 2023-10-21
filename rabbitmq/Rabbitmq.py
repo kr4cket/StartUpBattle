@@ -1,5 +1,7 @@
 import json
 import configparser
+
+from asyncio import ProactorEventLoop
 from pika import ConnectionParameters, PlainCredentials, BlockingConnection
 from pika.adapters.blocking_connection import BlockingChannel
 from abc import ABC, abstractmethod
@@ -17,7 +19,7 @@ class Rabbitmq(ABC):
 
     @classmethod
     @abstractmethod
-    def listen(cls):
+    def listen(cls, loop: ProactorEventLoop = None):
         pass
 
     @classmethod
