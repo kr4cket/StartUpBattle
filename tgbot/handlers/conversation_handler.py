@@ -39,13 +39,13 @@ async def theme_list(callback: CallbackQuery):
             text=f'Вы выбрали сложность: "{callback.data}"\nВыберите тему',
             reply_markup=ThemeKeyBoard().get_buttons()
         )
-        await callback.answer()
     else:
         await greeting_phrase(callback)
 
 
 @router.message(Command('close'))
 async def close_dialog(message: types.Message):
+    ConversationService().clear_user_data(message.from_user.id)
     await message.answer(text='Нажмите на /start')
 
 

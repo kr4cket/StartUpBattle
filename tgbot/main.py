@@ -1,5 +1,6 @@
 import asyncio
 import configparser
+import tgbot.core.logger as logger
 import threading
 
 from aiogram import Dispatcher
@@ -9,6 +10,8 @@ from tgbot.core.RabbitmqTgbot import RabbitmqTgbot
 
 
 async def main(parser):
+
+    logger.create()
     dp = Dispatcher()
     dp.include_router(conversation_handler.router)
 
