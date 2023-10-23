@@ -18,6 +18,9 @@ dp = Dispatcher()
 
 COMMANDS = {
     '/close': 'завершить работу',
+    '/change_level': 'сменить уровень',
+    '/change_lang': 'сменить язык',
+    '/change_theme': 'сменить тему',
 }
 
 
@@ -47,7 +50,6 @@ async def bot_start(message: types.Message):
 
 @dp.callback_query(F.data.contains('язык'))
 async def themes_list(callback: CallbackQuery):
-    # await bot.delete_message(callback.from_user.id, callback.message.message_id)
     buttons = [
         'тема 1',
         'тема 2',
@@ -78,6 +80,29 @@ async def greeting_phrase(callback: CallbackQuery):
 @dp.message(Command('close'))
 async def close_dialog(message: types.Message):
     await message.answer(text='Нажмите на /start')
+
+
+@dp.message(Command('change_lang'))
+async def change_lang(message: types.Message):
+    await bot_start(message)
+
+
+@dp.message(Command('change_theme'))
+async def change_theme(message: types.Message):
+    buttons = [
+            'тема 1',
+            'тема 2',
+            'тема 3',
+            'тема 4',
+            'тема 5',
+            'тема 6',
+            'тема 7',
+    ]
+    await bot.send_message(
+            chat_id=message.from_user.id,
+            text=f'Выберите тему',
+            reply_markup=generate_markup(buttons)
+    )
 
 
 @dp.message(F.text)
