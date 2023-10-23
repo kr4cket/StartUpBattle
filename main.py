@@ -38,6 +38,7 @@ def generate_markup(data) -> types.InlineKeyboardMarkup:
 @dp.message(CommandStart())
 async def bot_start(message: types.Message):
 
+
     buttons = [
         'Русский язык',
         'Английский язык',
@@ -85,6 +86,25 @@ async def close_dialog(message: types.Message):
 @dp.message(Command('change_lang'))
 async def change_lang(message: types.Message):
     await bot_start(message)
+
+
+# для смены уровня
+@dp.message(Command('change_level'))
+async def change_level(message: types.Message):
+    buttons = [
+            'тема 1',
+            'тема 2',
+            'тема 3',
+            'тема 4',
+            'тема 5',
+            'тема 6',
+            'тема 7',
+    ]
+    await bot.send_message(
+            chat_id=message.from_user.id,
+            text=f'Выберите уровень',
+            reply_markup=generate_markup(buttons)
+    )
 
 
 @dp.message(Command('change_theme'))
