@@ -1,8 +1,6 @@
 import logging
 
-conversation_service = logging.getLogger("tg.bot.service.conversation")
-conversation_handler = logging.getLogger("tg.bot.handler.conversation")
-
+ai_module = logging.getLogger("worker.core.ai-module")
 
 def create():
     logging.basicConfig(filename='logs/logs.log',
@@ -10,4 +8,4 @@ def create():
                         format='[%(asctime)s:%(levelname)s] [%(name)s] %(message)s',
                         level=logging.INFO)
 
-    logging.info('TGBot started!')
+    logging.info('Worker started!')

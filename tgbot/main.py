@@ -4,7 +4,7 @@ import tgbot.core.logger as logger
 import threading
 
 from aiogram import Dispatcher
-from handlers import conversation_handler
+from handlers import conversation_callback_handler
 from tgbot.core.TelegramBot import TelegramBot
 from tgbot.core.RabbitmqTgbot import RabbitmqTgbot
 
@@ -13,7 +13,7 @@ async def main(parser):
 
     logger.create()
     dp = Dispatcher()
-    dp.include_router(conversation_handler.router)
+    dp.include_router(conversation_callback_handler.router)
 
     loop = asyncio.get_event_loop()
 

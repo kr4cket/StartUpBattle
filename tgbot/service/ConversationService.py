@@ -2,7 +2,7 @@ from tgbot.core.models import *
 import tgbot.core.logger as logger
 
 
-class ConversationModel:
+class ConversationService:
 
     @classmethod
     def is_theme_set(cls, user_id: int) -> bool:
