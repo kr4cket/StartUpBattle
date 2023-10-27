@@ -1,9 +1,5 @@
 from peewee import *
-
-user = 'stbuser'
-password = 'stbuser'
-db_name = 'data'
-
+import configparser
 
 class DBConnection:
 
@@ -17,12 +13,12 @@ class DBConnection:
         return cls.instance
 
     def __create(self) -> PostgresqlDatabase:
-        #Добавить парсер конфига
+        data = self.__get_config_data()
         return PostgresqlDatabase(
-            db_name, user=user,
-            password=password,
-            host='localhost',
-            port=5436
+            data['DB_NAME'], user=data['DB_USER'],
+            password=data['DB_PASS'],
+            host=data['DB_HOST'],
+            port=data['DB_PORT']
         )
 
     def __connect(self) -> None:
@@ -31,3 +27,7 @@ class DBConnection:
     def get_handle(self):
         return self.__handle
 
+    def __get_config_data(self):
+        parser = configparser.ConfigParser()
+        parser.read("../settings.ini")
+        return parser['db']

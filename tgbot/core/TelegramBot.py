@@ -9,7 +9,7 @@ class TelegramBot:
     def __new__(cls):
         if not hasattr(cls, 'instance'):
             parser = configparser.ConfigParser()
-            parser.read("../settings.ini")
+            parser.read("settings.ini")
 
             cls.instance = super(TelegramBot, cls).__new__(cls)
 

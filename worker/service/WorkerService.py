@@ -1,7 +1,7 @@
 import json
 
-from worker.core.AIModule import AIService
-from worker.core.PromptGenerator import PromptGenerator
+from core.AIModule import AIService
+from core.PromptGenerator import PromptGenerator
 
 
 class WorkerService:

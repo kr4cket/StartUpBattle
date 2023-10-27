@@ -1,18 +1,17 @@
 import json
 import configparser
 
-from asyncio import ProactorEventLoop
 from pika import ConnectionParameters, PlainCredentials, BlockingConnection
 
 from rabbitmq.Rabbitmq import Rabbitmq
-from worker.service.WorkerService import WorkerService
+from service.WorkerService import WorkerService
 
 
 class RabbitmqWorker(Rabbitmq):
     def __new__(cls):
         if not cls._instance:
             parser = configparser.ConfigParser()
-            parser.read("../settings.ini")
+            parser.read("settings.ini")
             cls.__config = parser['rabbitmq']
 
             parameters = ConnectionParameters(
@@ -39,7 +38,7 @@ class RabbitmqWorker(Rabbitmq):
         return cls._instance
 
     @classmethod
-    def listen(cls, loop: ProactorEventLoop = None):
+    def listen(cls, loop=None):
         def input_callback(ch, method, properties, body):
             print(f" [x] Worker received from tgbot: {body}")
 

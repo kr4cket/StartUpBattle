@@ -1,17 +1,15 @@
 import json
 
-from asyncio import ProactorEventLoop
-
-from tgbot.service.ConversationService import ConversationService
-from tgbot.core.RabbitmqTgbot import RabbitmqTgbot
-from tgbot.service.SenderService import SenderService
-#from tgbot.handlers.conversation_handler import send_message_to_user
+from service.ConversationService import ConversationService
+from core.RabbitmqTgbot import RabbitmqTgbot
+from service.SenderService import SenderService
 
 
 class RabbitmqService:
     @classmethod
     def send_data_rabbitmq(cls, user_id: int, message_type: str, text_data: str = ""):
         chat = ConversationService().get_chat_info(user_id)
+        sender = RabbitmqTgbot()
 
         request = (json.dumps(
             {
@@ -24,10 +22,12 @@ class RabbitmqService:
                 "answer": ""
             }))
 
-        RabbitmqTgbot().send(request)
+        sender.send(request)
+        sender.close_connection()
+
 
     @classmethod
-    def send_message(cls, data: json, loop: ProactorEventLoop = None):
+    def send_message(cls, data: json, loop=None):
         data = json.loads(data)
 
         SenderService.send(data["user_id"], data["answer"], loop)

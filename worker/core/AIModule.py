@@ -1,5 +1,5 @@
 import g4f
-from worker.core.logger import ai_module
+from core.logger import ai_module
 
 
 class AIService:

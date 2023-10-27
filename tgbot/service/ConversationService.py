@@ -1,5 +1,5 @@
-from tgbot.core.models import *
-import tgbot.core.logger as logger
+from core.models import *
+import core.logger as logger
 
 
 class ConversationService:

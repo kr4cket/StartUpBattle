@@ -8,6 +8,6 @@ def create():
     logging.basicConfig(filename='logs/logs.log',
                         filemode='w',
                         format='[%(asctime)s:%(levelname)s] [%(name)s] %(message)s',
-                        level=logging.INFO)
+                        level=logging.ERROR)
 
     logging.info('TGBot started!')

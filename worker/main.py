@@ -1,5 +1,5 @@
-from worker.core.RabbitmqWorker import RabbitmqWorker
-import worker.core.logger as logger
+from core.RabbitmqWorker import RabbitmqWorker
+import core.logger as logger
 
 if __name__ == "__main__":
     logger.create()

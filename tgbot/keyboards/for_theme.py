@@ -1,6 +1,6 @@
 from aiogram.types import InlineKeyboardMarkup
 from aiogram.utils.keyboard import InlineKeyboardBuilder
-from tgbot.core.models import Theme
+from core.models import Theme
 
 
 class ThemeKeyBoard:

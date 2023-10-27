@@ -1,7 +1,7 @@
 from aiogram.types import InlineKeyboardMarkup
 from aiogram.utils.keyboard import InlineKeyboardBuilder
-from tgbot.core.models import LanguageLevel
-from tgbot.core.models import Language
+from core.models import LanguageLevel
+from core.models import Language
 
 
 class LevelKeyBoard:

@@ -1,10 +1,10 @@
 from aiogram import Router, F, types
 from aiogram.filters import CommandStart, Command
 
-from tgbot.keyboards.for_lang import LangKeyBoard
-from tgbot.keyboards.for_level import LevelKeyBoard
-from tgbot.keyboards.for_theme import ThemeKeyBoard
-from tgbot.service.ConversationService import ConversationService
+from keyboards.for_lang import LangKeyBoard
+from keyboards.for_level import LevelKeyBoard
+from keyboards.for_theme import ThemeKeyBoard
+from service.ConversationService import ConversationService
 
 
 router = Router()

@@ -1,12 +1,12 @@
 import asyncio
 import configparser
-import tgbot.core.logger as logger
+import core.logger as logger
 import threading
 
 from aiogram import Dispatcher
 from handlers import conversation_callback_handler
-from tgbot.core.TelegramBot import TelegramBot
-from tgbot.core.RabbitmqTgbot import RabbitmqTgbot
+from core.TelegramBot import TelegramBot
+from core.RabbitmqTgbot import RabbitmqTgbot
 
 
 async def main(parser):
@@ -23,7 +23,7 @@ async def main(parser):
 
 if __name__ == '__main__':
     parser = configparser.ConfigParser()
-    parser.read("../settings.ini")
+    parser.read("settings.ini")
     asyncio.run(main(parser))
 
 

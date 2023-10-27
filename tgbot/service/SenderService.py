@@ -1,12 +1,12 @@
 import asyncio
 
-from tgbot.core.TelegramBot import TelegramBot
-from tgbot.service.RabbitmqService import *
+from core.TelegramBot import TelegramBot
+from service.RabbitmqService import *
 
 
 class SenderService:
     @staticmethod
-    def send(user_id: int, text: str, loop: ProactorEventLoop):
+    def send(user_id: int, text: str, loop):
 
         bot = TelegramBot().get_bot_instance()
 

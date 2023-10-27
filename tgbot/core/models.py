@@ -1,5 +1,5 @@
 from peewee import *
-from tgbot.core.db_conn import DBConnection
+from core.db_conn import DBConnection
 
 
 class BaseModel(Model):

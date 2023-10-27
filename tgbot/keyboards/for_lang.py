@@ -1,6 +1,6 @@
 from aiogram.types import InlineKeyboardMarkup
 from aiogram.utils.keyboard import InlineKeyboardBuilder
-from tgbot.core.models import Language
+from core.models import Language
 
 
 class LangKeyBoard:
