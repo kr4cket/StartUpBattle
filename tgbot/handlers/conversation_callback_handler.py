@@ -14,6 +14,7 @@ router = Router()
 @router.message(CommandStart())
 async def bot_start(message: types.Message):
     ConversationService().start(message.from_user.id)
+    await message.answer(text='Из-за высокой нагрузки я могу долго отвечать на твое сообщение(')
     await message.answer(text='Выберете язык',
                          reply_markup=LangKeyBoard().get_buttons())
 

@@ -8,33 +8,30 @@ from rabbitmq.Rabbitmq import Rabbitmq
 
 class RabbitmqTgbot(Rabbitmq):
     def __new__(cls):
-        if not cls._instance:
-            parser = configparser.ConfigParser()
-            parser.read("../settings.ini")
-            cls.__config = parser['rabbitmq']
+        parser = configparser.ConfigParser()
+        parser.read("../settings.ini")
+        cls.__config = parser['rabbitmq']
 
-            parameters = ConnectionParameters(
-                host=cls.__config['rabbit_host'],
-                virtual_host=cls.__config['rabbit_vhost'],
-                port=int(cls.__config['rabbit_port']),
-                credentials=PlainCredentials(cls.__config['rabbit_login'], cls.__config['rabbit_password']),
-                heartbeat=600,
-                blocked_connection_timeout=14400
-            )
+        parameters = ConnectionParameters(
+            host=cls.__config['rabbit_host'],
+            virtual_host=cls.__config['rabbit_vhost'],
+            port=int(cls.__config['rabbit_port']),
+            credentials=PlainCredentials(cls.__config['rabbit_login'], cls.__config['rabbit_password']),
+            heartbeat=600,
+            blocked_connection_timeout=14400
+        )
 
-            cls._instance = super(RabbitmqTgbot, cls).__new__(cls)
+        cls.__connection = BlockingConnection(parameters)
 
-            cls.__connection = BlockingConnection(parameters)
+        cls.__channel = cls.__connection.channel()
 
-            cls.__channel = cls.__connection.channel()
+        cls.__channel.queue_bind(
+            queue=cls.__config['output_queue'],
+            exchange=cls.__config['out_exchange'],
+            routing_key=cls.__config['output_queue']
+        )
 
-            cls.__channel.queue_bind(
-                queue=cls.__config['output_queue'],
-                exchange=cls.__config['out_exchange'],
-                routing_key=cls.__config['output_queue']
-            )
-
-        return cls._instance
+        return cls
 
     @classmethod
     def listen(cls, loop: ProactorEventLoop = None):

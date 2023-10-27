@@ -5,7 +5,6 @@ from asyncio import ProactorEventLoop
 from tgbot.service.ConversationService import ConversationService
 from tgbot.core.RabbitmqTgbot import RabbitmqTgbot
 from tgbot.service.SenderService import SenderService
-#from tgbot.handlers.conversation_handler import send_message_to_user
 
 
 class RabbitmqService:
@@ -30,5 +29,4 @@ class RabbitmqService:
     def send_message(cls, data: json, loop: ProactorEventLoop = None):
         data = json.loads(data)
 
-        SenderService.send(data["user_id"], data["answer"], loop)
-        # send_message_to_user(data["user_id"], data["answer"], loop)
+        SenderService().send(data["user_id"], data["answer"], loop)

@@ -1,4 +1,6 @@
+import configparser
 import g4f
+
 from worker.core.logger import ai_module
 
 
@@ -11,11 +13,20 @@ class AIService:
         """
 
         try:
-            # g4f.Provider.FakeGpt
+            parser = configparser.ConfigParser()
+            parser.read("../settings.ini")
+
+            # полностью рабочий чат бот - g4f.Provider.FakeGpt
             response = g4f.ChatCompletion.create(
                 model="gpt-3.5-turbo",
-                provider=g4f.Provider.FakeGpt,
-                messages=[{"role": "user", "content": prompt}]
+                provider=g4f.Provider.Bard,
+                messages=[{"role": "user", "content": prompt}],
+                auth="cookies",
+                cookies={
+                    "__Secure-1PSID": parser["Bard"]["__Secure-1PSID"],
+                    "__Secure-1PSIDTS": parser["Bard"]["__Secure-1PSIDTS"]
+                },
+                proxy="https://144.48.38.39:8443"
             )
 
             result = ""
